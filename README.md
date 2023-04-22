@@ -48,7 +48,7 @@
 ## Usage
 
 ```console
-cookiecutter gh:cjolowicz/cookiecutter-hypermodern-python --checkout=2022.6.3
+cookiecutter gh:dbatten5/cookiecutter-hypermodern-python --checkout=2022.6.3
 ```
 
 ## Features
@@ -57,7 +57,7 @@ cookiecutter gh:cjolowicz/cookiecutter-hypermodern-python --checkout=2022.6.3
 
 - Packaging and dependency management with [Poetry]
 - Test automation with [Nox]
-- Linting with [pre-commit] and [Flake8]
+- Linting with [pre-commit] and [ruff]
 - Continuous integration with [GitHub Actions]
 - Documentation with [Sphinx], [MyST], and [Read the Docs] using the [furo] theme
 - Automated uploads to [PyPI] and [TestPyPI]
@@ -87,7 +87,7 @@ The template supports Python 3.7, 3.8, 3.9, and 3.10.
 [codecov]: https://codecov.io/
 [coverage.py]: https://coverage.readthedocs.io/
 [dependabot]: https://github.com/dependabot/dependabot-core
-[flake8]: http://flake8.pycqa.org
+[ruff]: https://beta.ruff.rs/docs/
 [furo]: https://pradyunsg.me/furo/
 [github actions]: https://github.com/features/actions
 [github labeler]: https://github.com/marketplace/actions/github-labeler
