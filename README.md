@@ -12,6 +12,7 @@
 [![pre-commit enabled][pre-commit badge]][pre-commit project]
 [![Black codestyle][black badge]][black project]
 [![Contributor Covenant][contributor covenant badge]][code of conduct]
+[![Ruff][ruff badge]][ruff]
 
 [black badge]: https://img.shields.io/badge/code%20style-black-000000.svg
 [black project]: https://github.com/psf/black
@@ -32,6 +33,7 @@
 [readthedocs badge]: https://img.shields.io/readthedocs/cookiecutter-hypermodern-python/latest.svg?label=Read%20the%20Docs
 [readthedocs page]: https://cookiecutter-hypermodern-python.readthedocs.io/
 [status badge]: https://badgen.net/badge/status/alpha/d8624d
+[ruff badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
 
 <!-- badges-end -->
 
@@ -49,10 +51,11 @@ This fork is largely the same as the upstream but with some small differences:
 
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [hypermodern python]: https://medium.com/@cjolowicz/hypermodern-python-d44485d9d769
+
 ## Usage
 
 ```console
-cookiecutter gh:dbatten5/cookiecutter-hypermodern-python --checkout=2022.6.3
+cookiecutter gh:dbatten5/cookiecutter-hypermodern-python
 ```
 
 ## Features
@@ -68,7 +71,6 @@ cookiecutter gh:dbatten5/cookiecutter-hypermodern-python --checkout=2022.6.3
 - Automated release notes with [Release Drafter]
 - Automated dependency updates with [Dependabot]
 - Code formatting with [Black] and [Prettier]
-- Import sorting with [isort]
 - Testing with [pytest]
 - Code coverage with [Coverage.py]
 - Coverage reporting with [Codecov]
@@ -95,7 +97,6 @@ The template supports Python 3.7, 3.8, 3.9, and 3.10.
 [furo]: https://pradyunsg.me/furo/
 [github actions]: https://github.com/features/actions
 [github labeler]: https://github.com/marketplace/actions/github-labeler
-[isort]: https://pycqa.github.io/isort/
 [mypy]: http://mypy-lang.org/
 [myst]: https://myst-parser.readthedocs.io/
 [napoleon]: https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
