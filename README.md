@@ -45,6 +45,11 @@
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [hypermodern python]: https://medium.com/@cjolowicz/hypermodern-python-d44485d9d769
 
+This fork is largely the same as the upstream but with some small differences:
+
+- Linting is done with `ruff` rather than `flake8`.
+- Poetry dependencies are organised using the new recommended `group` pattern.
+
 ## Usage
 
 ```console
