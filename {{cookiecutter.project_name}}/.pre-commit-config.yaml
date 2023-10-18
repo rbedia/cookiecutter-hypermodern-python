@@ -1,13 +1,6 @@
 repos:
   - repo: local
     hooks:
-      - id: bandit
-        name: bandit
-        entry: bandit
-        language: system
-        types: [python]
-        require_serial: true
-        args: ["-c", "bandit.yml"]
       - id: black
         name: black
         entry: black
@@ -47,13 +40,6 @@ repos:
         types: [python]
         require_serial: true
         args: ["--fix"]
-      - id: pyupgrade
-        name: pyupgrade
-        description: Automatically upgrade syntax for newer versions.
-        entry: pyupgrade
-        language: system
-        types: [python]
-        args: [--py37-plus]
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
         entry: trailing-whitespace-fixer
