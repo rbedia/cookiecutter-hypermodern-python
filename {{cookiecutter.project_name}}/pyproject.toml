@@ -72,44 +72,36 @@ show_error_context = true
 
 [tool.ruff]
 src = ['src', 'tests']
-line-length = 80
+line-length = 88
 select = [
-    'A',
-    'ARG',
-    'B',
-    'B9',
-    'BLE',
-    'C',
-    'C4',
-    'D',
-    'DTZ',
-    'E',
-    'F',
-    'I',
-    'N',
-    'PIE',
-    'PT',
-    'PTH',
-    'Q',
-    'RET',
-    'S',
-    'SIM',
-    'SLF',
-    'T10',
-    'TCH',
-    'UP',
-    'W',
+  'A',
+  'ARG',
+  'B',
+  'B9',
+  'BLE',
+  'C',
+  'C4',
+  'D',
+  'DTZ',
+  'E',
+  'F',
+  'I',
+  'N',
+  'PIE',
+  'PT',
+  'PTH',
+  'Q',
+  'RET',
+  'RUF',
+  'S',
+  'SIM',
+  'SLF',
+  'T10',
+  'TCH',
+  'UP',
+  'W',
 ]
 target-version = 'py37'
-
-[tool.ruff.mccabe]
-max-complexity = 10
-
-[tool.ruff.pydocstyle]
-convention = 'google'
-
-[tool.ruff.isort]
-force-single-line = true
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ['F401']
@@ -120,6 +112,15 @@ force-single-line = true
     'D205',
     'D104',
 ]
+
+[tool.ruff.mccabe]
+max-complexity = 10
+
+[tool.ruff.pydocstyle]
+convention = 'google'
+
+[tool.ruff.isort]
+force-single-line = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
