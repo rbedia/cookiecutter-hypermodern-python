@@ -84,7 +84,7 @@ cookiecutter gh:dbatten5/cookiecutter-hypermodern-python
 - Generate command-line reference with [sphinx-click]
 - Manage project labels with [GitHub Labeler]
 
-The template supports Python 3.7, 3.8, 3.9, and 3.10.
+The template supports Python 3.8, 3.9, and 3.10.
 
 [autodoc]: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
 [bandit]: https://github.com/PyCQA/bandit
