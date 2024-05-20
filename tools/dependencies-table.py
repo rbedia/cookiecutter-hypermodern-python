@@ -37,10 +37,16 @@ def main() -> None:
 
     dependencies = {
         canonicalize_name(dependency)
-        for section in ["dependencies", "dev-dependencies"]
-        for dependency in data["tool"]["poetry"][section].keys()
+        for dependency in data["tool"]["poetry"]["dependencies"].keys()
         if dependency != "python"
     }
+
+    dependencies = dependencies.union({
+        canonicalize_name(dependency)
+        for group in data["tool"]["poetry"]["group"].values()
+        for dependency in group["dependencies"].keys()
+        if dependency != "python"
+    })
 
     path = PROJECT / "poetry.lock"
     text = path.read_text()
