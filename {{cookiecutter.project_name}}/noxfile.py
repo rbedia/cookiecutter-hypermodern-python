@@ -4,6 +4,7 @@ import os
 import shlex
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 from textwrap import dedent
 
@@ -34,6 +35,25 @@ nox.options.sessions = (
     "xdoctest",
     "docs-build",
 )
+
+
+def install_poetry_groups(session, *groups: str) -> None:
+    """Install dependencies from poetry groups.
+
+    Using this as a workaround until this PR is merged in:
+    https://github.com/cjolowicz/nox-poetry/pull/1080
+    """
+    with tempfile.NamedTemporaryFile() as requirements:
+        session.run(
+            "poetry",
+            "export",
+            *[f"--only={group}" for group in groups],
+            "--format=requirements.txt",
+            "--without-hashes",
+            f"--output={requirements.name}",
+            external=True,
+        )
+        session.install("-r", requirements.name)
 
 
 def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
@@ -119,16 +139,7 @@ def precommit(session: Session) -> None:
         "--hook-stage=manual",
         "--show-diff-on-failure",
     ]
-    session.install(
-        "bandit",
-        "black",
-        "darglint",
-        "ruff",
-        "pep8-naming",
-        "pre-commit",
-        "pre-commit-hooks",
-        "pyupgrade",
-    )
+    install_poetry_groups(session, "dev")
     session.run("pre-commit", *args)
     if args and args[0] == "install":
         activate_virtualenv_in_precommit_hooks(session)
@@ -209,7 +220,7 @@ def docs_build(session: Session) -> None:
         args.insert(0, "--color")
 
     session.install(".")
-    session.install("sphinx", "sphinx-click", "furo", "myst-parser")
+    install_poetry_groups(session, "docs")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
@@ -223,7 +234,7 @@ def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]
     session.install(".")
-    session.install("sphinx", "sphinx-autobuild", "sphinx-click", "furo", "myst-parser")
+    install_poetry_groups(session, "docs")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
