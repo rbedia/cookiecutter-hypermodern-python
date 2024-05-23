@@ -691,7 +691,7 @@ specified in [PEP 517][pep 517] and [518][pep 518]:
 
 - - `tool.coverage`
   - Configuration for [Coverage.py]
-- - `tool.isort`
+- - `tool.ruff.lint.isort`
   - Configuration for [isort]
 - - `tool.mypy`
   - Configuration for [mypy]
@@ -751,7 +751,9 @@ Poetry writes a version constraint to `pyproject.toml`.
 Dependencies are kept in two TOML tables:
 
 - `tool.poetry.dependencies`---for core dependencies
-- `tool.poetry.dev-dependencies`---for development dependencies
+- `tool.poetry.group.dev.dependencies`---for development dependencies
+- `tool.poetry.group.test.dependencies`---for test dependencies
+- `tool.poetry.group.docs.dependencies`---for documentation dependencies
 
 By default, version constraints added by Poetry have both a lower and an upper bound:
 
