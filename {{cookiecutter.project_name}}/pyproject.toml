@@ -33,11 +33,11 @@ xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 Pygments = ">=2.10.0"
 black = "*"
 darglint = ">=1.8.1"
-ruff = "*"
 mypy = "*"
 pep8-naming = ">=0.12.1"
 pre-commit = ">=2.16.0"
 pre-commit-hooks = ">=4.1.0"
+ruff = "*"
 safety = ">=1.10.3"
 typeguard = ">=2.13.3"
 
