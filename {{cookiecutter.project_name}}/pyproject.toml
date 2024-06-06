@@ -101,7 +101,7 @@ lint.select = [
   'UP',
   'W',
 ]
-target-version = 'py37'
+target-version = 'py38'
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ['F401']
