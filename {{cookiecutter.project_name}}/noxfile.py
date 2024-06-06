@@ -37,7 +37,7 @@ nox.options.sessions = (
 )
 
 
-def install_poetry_groups(session, *groups: str) -> None:
+def install_poetry_groups(session: Session, *groups: str) -> None:
     """Install dependencies from poetry groups.
 
     Using this as a workaround until this PR is merged in:
