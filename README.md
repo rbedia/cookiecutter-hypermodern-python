@@ -55,7 +55,7 @@ This fork is largely the same as the upstream but with some small differences:
 ## Usage
 
 ```console
-cookiecutter gh:dbatten5/cookiecutter-hypermodern-python
+cookiecutter gh:rbedia/cookiecutter-hypermodern-python
 ```
 
 ## Features
