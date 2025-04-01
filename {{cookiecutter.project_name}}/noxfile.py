@@ -1,5 +1,6 @@
 """Nox sessions."""
 
+import hashlib
 import os
 import shlex
 import shutil
@@ -7,12 +8,15 @@ import sys
 import tempfile
 from pathlib import Path
 from textwrap import dedent
+from typing import Iterable
+from typing import Iterator
 
 import nox
 
 try:
     from nox_poetry import Session
     from nox_poetry import session
+    from nox_poetry.poetry import CommandSkippedError
 except ImportError:
     message = f"""\
     Nox failed to import the 'nox-poetry' package.
@@ -24,7 +28,7 @@ except ImportError:
 
 
 package = "{{cookiecutter.package_name}}"
-python_versions = ["3.10", "3.9", "3.8"]
+python_versions = ["3.10"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
@@ -35,6 +39,75 @@ nox.options.sessions = (
     "xdoctest",
     "docs-build",
 )
+
+
+def poetry_export(poetry) -> str:
+    """Export the lock file to requirements format."""
+    dependency_groups = (
+        [f"--with={group}" for group in poetry.config.dependency_groups]
+        if poetry.has_dependency_groups
+        else ["--dev"]
+    )
+
+    output = poetry.session.run_always(
+        "poetry",
+        "export",
+        "--format=requirements.txt",
+        *dependency_groups,
+        *[f"--extras={extra}" for extra in poetry.config.extras],
+        external=True,
+        silent=True,
+        stderr=None,
+    )
+
+    if output is None:
+        raise CommandSkippedError(  # pragma: no cover
+            "The command `poetry export` was not executed"
+            " (a possible cause is specifying `--no-install`)"
+        )
+
+    assert isinstance(output, str)  # noqa: S101
+
+    def _stripwarnings(lines: Iterable[str]) -> Iterator[str]:
+        for line in lines:
+            if line.startswith("Warning:"):
+                print(line, file=sys.stderr)
+                continue
+            yield line
+
+    return "".join(_stripwarnings(output.splitlines(keepends=True)))
+
+
+def export_requirements(sessions) -> Path:
+    """Export a requirements file from Poetry.
+
+    This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
+    to generate a :ref:`requirements file <Requirements Files>` containing the
+    project dependencies at the versions specified in ``poetry.lock``. The
+    requirements file includes both core and development dependencies.
+
+    The requirements file is stored in a per-session temporary directory,
+    together with a hash digest over ``poetry.lock`` to avoid generating the
+    file when the dependencies have not changed since the last run.
+    """
+    # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
+    # have it. We'll just create a fake virtualenv directory in this case.
+
+    tmpdir = Path(sessions.session._runner.envdir) / "tmp"  # noqa: SLF001
+    tmpdir.mkdir(exist_ok=True, parents=True)
+
+    path = tmpdir / "requirements_full.txt"
+    hashfile = tmpdir / f"{path.name}.hash"
+
+    lockdata = Path("poetry.lock").read_bytes()
+    digest = hashlib.blake2b(lockdata, usedforsecurity=False).hexdigest()
+
+    if not hashfile.is_file() or hashfile.read_text() != digest:
+        constraints = poetry_export(sessions.poetry)
+        path.write_text(constraints)
+        hashfile.write_text(digest)
+
+    return path
 
 
 def install_poetry_groups(session: Session, *groups: str) -> None:
@@ -116,7 +189,8 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         text = hook.read_text()
 
         if not any(
-            Path("A") == Path("a") and bindir.lower() in text.lower() or bindir in text
+            (Path("A") == Path("a") and bindir.lower() in text.lower())
+            or bindir in text
             for bindir in bindirs
         ):
             continue
@@ -153,11 +227,21 @@ def safety(session: Session) -> None:
     session.run("safety", "check", "--full-report", f"--file={requirements}")
 
 
+@session(python=python_versions[0])
+def audit(session: Session) -> None:
+    """Scan dependencies for insecure packages."""
+    requirements = export_requirements(session.poetry)
+
+    session.install("pip-audit")
+    session.run("pip-audit", "--require-hashes", "--disable-pip", "-r", requirements)
+
+
 @session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
     session.install(".")
+    install_poetry_groups(session, "docs")
     session.install("mypy", "pytest")
     session.run("mypy", *args)
     if not session.posargs:
