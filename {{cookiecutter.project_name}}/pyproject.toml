@@ -101,6 +101,9 @@ lint.select = [
   'UP',
   'W',
 ]
+lint.ignore = [
+  'D107',  # __init__ documentation is stored in the class docstring
+]
 target-version = 'py38'
 
 [tool.ruff.lint.per-file-ignores]
